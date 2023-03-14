@@ -22,6 +22,8 @@
 #backgroundLayer5,
 #flyingEnemy,
 #groundEnemy,
-#trapEnemy {
+#trapEnemy,
+#collisionEffect,
+#projectile {
   display: none;
 }

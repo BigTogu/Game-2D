@@ -35,14 +35,17 @@ export class Player {
     this.weight = 1;
     //position of the player
     this.x = 0;
-    this.y = this.game.height - this.height - 85;
+    this.onGroundPosition = 85;
+    this.y = this.game.height - this.height - this.onGroundPosition;
 
     this.gameFrame = 0;
     this.staggerFrames = 8;
     this.spriteAnimations = [];
     this.spriteAnimationsAssigment();
+    this.time = 0;
   }
-  update(input, deltaTime) {
+  update(input, deltaTime, time) {
+    this.time += deltaTime;
     this.checkColision();
     let position =
       Math.floor(this.gameFrame / this.staggerFrames) %
@@ -51,7 +54,11 @@ export class Player {
     this.frameY = this.spriteAnimations["walk"].loc[position].y;
     this.gameFrame++;
 
-    if (input.includes("ArrowUp") && this.onGround()) this.vy -= 32;
+    if (
+      (input.includes("ArrowUp") || input.includes("swipe up")) &&
+      this.onGround()
+    )
+      this.vy -= 32;
     this.y += this.vy;
     let framePosition = this.spriteAnimations["jump"].loc;
     if (!this.onGround()) {
@@ -65,6 +72,7 @@ export class Player {
     //¿DOUBLE JUMP MAYBE???
   }
   draw(context) {
+    this.displayGameText(context);
     if (this.game.debug)
       context.strokeRect(this.x, this.y, this.width, this.height);
     context.drawImage(
@@ -94,6 +102,13 @@ export class Player {
     });
   }
 
+  restart() {
+    this.game.time = 0;
+    this.time = 0;
+    this.x = 0;
+    this.y = this.game.height - this.height - this.onGroundPosition;
+  }
+
   onGround() {
     return this.y >= this.game.height - this.height - 20;
   }
@@ -107,12 +122,33 @@ export class Player {
         element.enemy.y + element.enemy.height > this.y
       ) {
         element.enemy.markedForDeletion = true;
-
-        if (element.id === "flyingEnemy") {
-          this.game.score++;
-        }
-      } else {
+        this.game.gameOver = true;
       }
     });
+  }
+
+  displayGameText(context) {
+    context.font = "20px Helvetica";
+    context.fillStyle = "white";
+    context.fillText("Time: " + (this.time * 0.001).toFixed(1), 20, 80);
+    context.fillStyle = "black";
+    context.fillText("Time: " + (this.time * 0.001).toFixed(1), 22, 82);
+
+    if (this.game.gameOver) {
+      context.font = "40px Helvetica";
+      context.textAlign = "center";
+      context.fillStyle = "white";
+      context.fillText(
+        "TRY AGAIN, GOOD LUCK NEXT TIME, press Enter to Start Again",
+        this.game.width * 0.5,
+        this.game.height * 0.5
+      );
+      context.fillStyle = "black";
+      context.fillText(
+        "TRY AGAIN, GOOD LUCK NEXT TIME, press Enter to Start Again",
+        this.game.width * 0.5 + 2,
+        this.game.height * 0.5 + 2
+      );
+    }
   }
 }

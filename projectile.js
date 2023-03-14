@@ -1,12 +1,17 @@
+import { CollisionAnimation } from "./collisionAnimation.js";
+
 export class Projectile {
   constructor(game, player) {
     this.game = game;
-    this.x = player.x;
-    this.y = player.y;
+    this.x = player.x + 100;
+    this.y = player.y + 10;
     this.height = 3;
     this.width = 10;
     this.speed = 3;
     this.markedForDeletion = false;
+    this.image = document.getElementById("projectile");
+    this.sound = new Audio();
+    this.sound.src = "./sound/Fire impact 1.wav";
   }
 
   update() {
@@ -18,10 +23,8 @@ export class Projectile {
   }
 
   draw(context) {
-    if (this.game.debug)
-      context.strokeRect(this.x, this.y, this.width, this.height);
-    context.fillStyle = "red";
-    context.fillRect(this.x, this.y, this.width, this.height);
+    this.displayStatusText(context);
+    context.drawImage(this.image, this.x, this.y);
   }
 
   checkColision() {
@@ -36,9 +39,26 @@ export class Projectile {
         ) {
           element.enemy.markedForDeletion = true;
           projectile.markedForDeletion = true;
-          console.log("hello he colisionado");
+
+          this.game.collisions.push(
+            new CollisionAnimation(
+              this.game,
+              (element.enemy.x + element.enemy.width) * 0.5,
+              (element.enemy.y + element.enemy.height) * 0.5
+            )
+          );
+          this.game.score++;
+          this.sound.play();
         }
       });
     });
+  }
+
+  displayStatusText(context) {
+    context.font = "40px Helvetica";
+    context.fillStyle = "white";
+    context.fillText("Score: " + this.game.score, 20, 50);
+    context.fillStyle = "black";
+    context.fillText("Score: " + this.game.score, 22, 52);
   }
 }

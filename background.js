@@ -42,35 +42,35 @@ export class Background {
       this.width,
       this.height,
       this.backgroundLayer1,
-      0.2
+      0.6
     );
     this.layer2 = new Layer(
       this.game,
       this.width,
       this.height,
       this.backgroundLayer2,
-      0.2
+      0.8
     );
     this.layer3 = new Layer(
       this.game,
       this.width,
       this.height,
       this.backgroundLayer3,
-      0.4
+      0.5
     );
     this.layer4 = new Layer(
       this.game,
       this.width,
       this.height,
       this.backgroundLayer4,
-      0.6
+      1
     );
     this.layer5 = new Layer(
       this.game,
       this.width,
       this.height + 15,
       this.backgroundLayer5,
-      1
+      0.7
     );
 
     this.backgroundArray = [
@@ -91,5 +91,9 @@ export class Background {
     this.backgroundArray.forEach((layer) => {
       layer.draw(context);
     });
+  }
+
+  restart() {
+    this.x = 0;
   }
 }

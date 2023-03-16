@@ -29,8 +29,8 @@ class Layer {
 export class Background {
   constructor(game) {
     this.game = game;
-    this.width = 2400;
-    this.height = 800;
+    this.width = 1000;
+    this.height = 500;
     this.backgroundLayer1 = document.getElementById("backgroundLayer1");
     this.backgroundLayer2 = document.getElementById("backgroundLayer2");
     this.backgroundLayer3 = document.getElementById("backgroundLayer3");
@@ -68,7 +68,7 @@ export class Background {
     this.layer5 = new Layer(
       this.game,
       this.width,
-      this.height + 15,
+      this.height + 30,
       this.backgroundLayer5,
       0.7
     );

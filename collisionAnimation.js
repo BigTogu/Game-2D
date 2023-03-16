@@ -24,7 +24,7 @@ export class CollisionAnimation {
       0,
       this.width,
       this.height,
-      this.x,
+      this.game.height + this.x / 2,
       this.y,
       this.width,
       this.height
@@ -32,6 +32,7 @@ export class CollisionAnimation {
   }
 
   update(deltaTime) {
+    console.log(this.x);
     this.x -= this.game.speed;
     if (this.frameTimer > this.frameInterval) {
       this.frameX++;

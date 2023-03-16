@@ -6,7 +6,7 @@ import { Projectile } from "./projectile.js";
 
 window.addEventListener("load", function () {
   const loading = document.getElementById("loading");
-  // loading.style.display = "none"; //desapear the loading when it is fully load
+  loading.style.display = "none"; //desapear the loading when it is fully load
   const canvas = document.getElementById("canvas1");
   const ctx = canvas.getContext("2d");
   canvas.width = 1000;
@@ -17,11 +17,12 @@ window.addEventListener("load", function () {
     constructor(width, height) {
       this.width = width;
       this.height = height;
-      this.speed = 9;
+      this.speed = 5;
+      this.gameStarted = false;
       this.background = new Background(this);
       this.player = new Player(this); //we are inside the class game so, i'll pass this as an argument
       this.input = new InputHandler(this);
-      this.projectile = new Projectile(this, player);
+      //this.projectile = new Projectile(this, player);
       this.enemies = []; //hold all current active enemies
       this.enemyTimer = 0;
       this.enemyInterval = 0;
@@ -58,7 +59,7 @@ window.addEventListener("load", function () {
         this.sound.play();
         this.shootProjectile();
         this.availableProjectile = false;
-        setTimeout(() => (this.availableProjectile = true), 1500);
+        setTimeout(() => (this.availableProjectile = true), 200);
       }
 
       this.projectiles.forEach((projectile) => {
@@ -76,8 +77,8 @@ window.addEventListener("load", function () {
     }
     draw(context) {
       this.background.draw(context);
+      this.displayStatusText(context);
       this.player.draw(context);
-      this.projectile.draw(context);
 
       this.enemies.forEach((element) => {
         element.enemy.draw(context);
@@ -86,7 +87,6 @@ window.addEventListener("load", function () {
         projectile.draw(context);
       });
       this.collisions.forEach((collision) => {
-        // console.log("he entrado main");
         collision.draw(context);
       });
     }
@@ -96,7 +96,7 @@ window.addEventListener("load", function () {
     }
 
     addEnemy() {
-      if (Math.random() < 1) {
+      if (Math.random() > 0.4) {
         const groundEnemyObject = {
           id: "groundEnemy",
           enemy: new EnemyGround(this),
@@ -135,7 +135,17 @@ window.addEventListener("load", function () {
       this.gameOver = false;
       this.projectiles = [];
       this.time = 0;
-
+      lastTime = 0; // reset lastTime to 0
+      animate(0);
+    }
+    displayStatusText(context) {
+      context.font = "2rem Helvetica";
+      context.fillStyle = "white";
+      context.fillText("Score: " + this.score, 70, 50);
+      context.fillStyle = "black";
+      context.fillText("Score: " + this.score, 72, 52);
+    }
+    startGame() {
       animate(0);
     }
   }
@@ -157,7 +167,15 @@ window.addEventListener("load", function () {
       game.soundGame.pause();
     }
   }
-  if (!game.gameOver) {
-    animate(0);
-  }
+
+  const startScreen = document.getElementById("start-screen");
+
+  document.addEventListener("keydown", function (event) {
+    if (event.code === "KeyS" && !game.gameStarted) {
+      startScreen.style.display = "none";
+
+      game.startGame();
+      game.gameStarted = true;
+    }
+  });
 });

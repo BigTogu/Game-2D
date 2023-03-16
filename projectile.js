@@ -16,14 +16,17 @@ export class Projectile {
 
   update() {
     this.checkColision();
-    this.x += this.speed;
-    if (this.x > this.game.width * 0.8) {
+    let boundayX = this.game.width + (this.game.player.x + 100);
+    let futureX = this.x + this.speed;
+    this.x = futureX <= boundayX ? this.x + this.speed : boundayX;
+
+    if (this.x >= boundayX) {
       this.markedForDeletion = true;
     }
   }
 
   draw(context) {
-    this.displayStatusText(context);
+    // this.displayStatusText(context);
     context.drawImage(this.image, this.x, this.y);
   }
 
@@ -35,30 +38,26 @@ export class Projectile {
           element.enemy.x + element.enemy.width > projectile.x &&
           element.enemy.y < projectile.y + projectile.height &&
           element.enemy.y + element.enemy.height > projectile.y &&
-          element.id === "flyingEnemy"
+          element.id === "groundEnemy"
         ) {
-          element.enemy.markedForDeletion = true;
-          projectile.markedForDeletion = true;
+          if (!element.enemy.markedForDeletion) {
+            let collisionX = (element.enemy.x + element.enemy.width) * 0.5;
 
-          this.game.collisions.push(
-            new CollisionAnimation(
-              this.game,
-              (element.enemy.x + element.enemy.width) * 0.5,
-              (element.enemy.y + element.enemy.height) * 0.5
-            )
-          );
-          this.game.score++;
-          this.sound.play();
+            this.game.collisions.push(
+              new CollisionAnimation(
+                this.game,
+                collisionX,
+                (element.enemy.y + element.enemy.height) * 0.5
+              )
+            );
+            element.enemy.markedForDeletion = true;
+            projectile.markedForDeletion = true;
+
+            this.game.score++;
+            this.sound.play();
+          }
         }
       });
     });
-  }
-
-  displayStatusText(context) {
-    context.font = "40px Helvetica";
-    context.fillStyle = "white";
-    context.fillText("Score: " + this.game.score, 20, 50);
-    context.fillStyle = "black";
-    context.fillText("Score: " + this.game.score, 22, 52);
   }
 }

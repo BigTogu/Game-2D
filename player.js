@@ -35,8 +35,9 @@ export class Player {
     this.weight = 1;
     //position of the player
     this.x = 0;
-    this.onGroundPosition = 85;
+    this.onGroundPosition = 25;
     this.y = this.game.height - this.height - this.onGroundPosition;
+    this.tria = 300;
 
     this.gameFrame = 0;
     this.staggerFrames = 8;
@@ -106,11 +107,11 @@ export class Player {
     this.game.time = 0;
     this.time = 0;
     this.x = 0;
-    this.y = this.game.height - this.height - this.onGroundPosition;
+    this.y = this.tria;
   }
 
   onGround() {
-    return this.y >= this.game.height - this.height - 20;
+    return this.y >= this.game.height - this.height - this.onGroundPosition;
   }
 
   checkColision() {
@@ -121,6 +122,7 @@ export class Player {
         element.enemy.y < this.y + this.height &&
         element.enemy.y + element.enemy.height > this.y
       ) {
+        this.y = this.tria;
         element.enemy.markedForDeletion = true;
         this.game.gameOver = true;
       }
@@ -128,14 +130,14 @@ export class Player {
   }
 
   displayGameText(context) {
-    context.font = "20px Helvetica";
+    context.font = "1rem Helvetica";
     context.fillStyle = "white";
-    context.fillText("Time: " + (this.time * 0.001).toFixed(1), 20, 80);
+    context.fillText("Time: " + (this.time * 0.001).toFixed(1), 70, 80);
     context.fillStyle = "black";
-    context.fillText("Time: " + (this.time * 0.001).toFixed(1), 22, 82);
+    context.fillText("Time: " + (this.time * 0.001).toFixed(1), 72, 82);
 
     if (this.game.gameOver) {
-      context.font = "40px Helvetica";
+      context.font = "2rem Helvetica";
       context.textAlign = "center";
       context.fillStyle = "white";
       context.fillText(

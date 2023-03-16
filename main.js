@@ -96,7 +96,7 @@ window.addEventListener("load", function () {
     }
 
     addEnemy() {
-      if (Math.random() > 0.4) {
+      if (Math.random() > 0.2) {
         const groundEnemyObject = {
           id: "groundEnemy",
           enemy: new EnemyGround(this),
@@ -117,7 +117,7 @@ window.addEventListener("load", function () {
         this.enemies.push(trapEnemyObject);
       }
 
-      if (this.enemies.length <= 10) {
+      if (this.enemies.length <= 20) {
         const flyingEnemyObject = {
           id: "flyingEnemy",
           enemy: new EnemyFly(this),

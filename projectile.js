@@ -38,7 +38,7 @@ export class Projectile {
           element.enemy.x + element.enemy.width > projectile.x &&
           element.enemy.y < projectile.y + projectile.height &&
           element.enemy.y + element.enemy.height > projectile.y &&
-          element.id === "groundEnemy"
+          ["groundEnemy", "fliyingEnemy"].includes(element.id)
         ) {
           if (!element.enemy.markedForDeletion) {
             let collisionX = (element.enemy.x + element.enemy.width) * 0.5;
